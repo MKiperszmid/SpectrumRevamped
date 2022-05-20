@@ -4,11 +4,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 
 android {
-    compileSdk 32
+    compileSdk ProjectConfig.compileSdk
 
     defaultConfig {
-        minSdk 21
-        targetSdk 32
+        minSdk ProjectConfig.minSdk
+        targetSdk ProjectConfig.targetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -32,4 +32,10 @@ android {
 dependencies {
     kapt Hilt.hiltCompiler
     implementation Hilt.hiltAndroid
+
+    //TODO: Remove all UI tests on these modules in the future
+    testImplementation Testing.compose
+    testImplementation Testing.junit
+    androidTestImplementation Testing.compose
+    androidTestImplementation Testing.junitUi
 }
