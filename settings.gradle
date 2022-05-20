@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "SpectrumRevamped"
 include ':app'
+include ':home'
+include ':home:home_presentation'
+include ':home:home_data'
+include ':home:home_domain'
+include ':core'
+include ':core_ui'
