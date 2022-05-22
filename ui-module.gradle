@@ -45,15 +45,16 @@ dependencies {
     kapt Hilt.hiltCompiler
     implementation Hilt.hiltAndroid
 
-    implementation Compose.compiler
     implementation Compose.ui
-    implementation Compose.tooling
-    implementation Compose.hiltNavigationCompose
     implementation Compose.material
+    implementation Compose.tooling
     implementation Compose.runtime
-    implementation Compose.navigation
-    implementation Compose.viewModelCompose
+    implementation Compose.compiler
+    implementation Compose.icons
     implementation Compose.activityCompose
+    implementation Compose.viewModelCompose
+    implementation Compose.navigation
+    implementation Compose.hiltNavigationCompose
 
     testImplementation Testing.compose
     testImplementation Testing.junit

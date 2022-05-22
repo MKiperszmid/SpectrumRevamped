@@ -1,0 +1,7 @@
+<resources>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="explore">Explore</string>
+    <string name="profile">Profile</string>
+    <string name="recently_added">Recently Added</string>
+</resources>

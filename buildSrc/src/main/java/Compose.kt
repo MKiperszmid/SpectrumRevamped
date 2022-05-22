@@ -6,6 +6,7 @@ object Compose {
     const val tooling = "androidx.compose.ui:ui-tooling-preview:$version"
     const val runtime = "androidx.compose.runtime:runtime:$version"
     const val compiler = "androidx.compose.compiler:compiler:$version"
+    const val icons = "androidx.compose.material:material-icons-extended:$version"
 
     private const val activity_compose_version = "1.4.0"
     const val activityCompose = "androidx.activity:activity-compose:$activity_compose_version"
