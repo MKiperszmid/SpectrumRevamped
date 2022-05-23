@@ -38,9 +38,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onEvent(homeEvent: HomeEvent) {
+        when (homeEvent) {
+            is HomeEvent.OnPaginate -> {
+                viewModelScope.launch {
+                    displayError("Paginate!")
+                }
+            }
+        }
+    }
+
     private suspend fun getPopularArgentina() {
         state = state.copy(isLoading = true)
-        homeUseCases.popularArgentina().onSuccess {
+        homeUseCases.popularArgentina(0).onSuccess {
             state = state.copy(
                 popularArgentina = it
             )

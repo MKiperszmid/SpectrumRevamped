@@ -6,7 +6,7 @@ import com.mk.home_domain.repository.HomeRepository
 class PopularArgentina(
     private val repository: HomeRepository
 ) {
-    suspend operator fun invoke(): Result<List<Song>> {
-        return repository.getPopularArgentina()
+    suspend operator fun invoke(page: Int): Result<List<Song>> {
+        return repository.getPopularArgentina(page)
     }
 }

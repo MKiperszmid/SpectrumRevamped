@@ -17,9 +17,9 @@ class HomeRepositoryImpl(
         }
     }
 
-    override suspend fun getPopularArgentina(): Result<List<Song>> {
+    override suspend fun getPopularArgentina(page: Int): Result<List<Song>> {
         return try {
-            val popular = api.getPopularArgentina()
+            val popular = api.getPopularArgentina(page * DeezerApi.PAGE_SIZE)
             mapSongs(popular)
         } catch (e: Exception) {
             showError(e)

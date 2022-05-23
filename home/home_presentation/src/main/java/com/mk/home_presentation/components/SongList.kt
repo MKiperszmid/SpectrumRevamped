@@ -2,8 +2,10 @@ package com.mk.home_presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -18,7 +20,8 @@ import com.mk.home_domain.model.Song
 fun SongList(
     headerName: String,
     songs: List<Song>,
-    onClick: (Song) -> Unit
+    onClick: (Song) -> Unit,
+    onPaginate: () -> Unit
 ) {
     if (songs.isEmpty()) return
     val dimens = LocalDimensions.current
@@ -31,7 +34,8 @@ fun SongList(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(dimens.large))
-        LazyRow {
+        val state = rememberLazyListState()
+        LazyRow(state = state) {
             items(songs) { song ->
                 Spacer(modifier = Modifier.width(dimens.small))
                 SongItem(song = song, modifier = Modifier.clickable(
@@ -42,5 +46,12 @@ fun SongList(
                 Spacer(modifier = Modifier.width(dimens.small))
             }
         }
+        if (shouldPaginate(state, songs)) {
+            onPaginate()
+        }
     }
+}
+
+private fun shouldPaginate(state: LazyListState, songs: List<Song>): Boolean {
+    return state.layoutInfo.visibleItemsInfo.lastOrNull()?.index == songs.size - 3
 }

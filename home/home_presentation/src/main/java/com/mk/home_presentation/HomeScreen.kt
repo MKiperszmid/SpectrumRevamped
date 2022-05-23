@@ -36,12 +36,18 @@ fun HomeScreen(
         SongList(
             headerName = stringResource(id = R.string.top_songs),
             songs = state.topSongs,
-            onClick = onClick
+            onClick = onClick,
+            onPaginate = {
+                viewModel.onEvent(HomeEvent.OnPaginate)
+            }
         )
         SongList(
             headerName = stringResource(id = R.string.popular_argentina),
             songs = state.popularArgentina,
-            onClick = onClick
+            onClick = onClick,
+            onPaginate = {
+                viewModel.onEvent(HomeEvent.OnPaginate)
+            }
         )
     }
     Loader(state.isLoading)
