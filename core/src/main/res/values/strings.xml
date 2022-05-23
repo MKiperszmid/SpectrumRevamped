@@ -4,4 +4,5 @@
     <string name="explore">Explore</string>
     <string name="profile">Profile</string>
     <string name="top_songs">Top Songs</string>
+    <string name="unknown_error">Oops, something went wrong</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mk.core_ui.UIEvent
+import com.mk.core_ui.UIText
 import com.mk.home_domain.use_case.HomeUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -37,10 +38,15 @@ class HomeViewModel @Inject constructor(
                 )
             }.onFailure {
                 state = state.copy(isLoading = false)
-                it.message?.let { error ->
-                    _uiEvent.send(UIEvent.ShowSnackbar(error))
-                }
+                displayError(it.message)
             }
         }
+    }
+
+    private suspend fun displayError(message: String?) {
+        val uiText =
+            if (message.isNullOrEmpty()) UIText.StringResource(com.mk.core.R.string.unknown_error)
+            else UIText.DynamicString(message)
+        _uiEvent.send(UIEvent.ShowSnackbar(uiText))
     }
 }

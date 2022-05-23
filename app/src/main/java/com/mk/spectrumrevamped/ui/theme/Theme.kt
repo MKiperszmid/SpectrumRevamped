@@ -1,9 +1,14 @@
 package com.mk.spectrumrevamped.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import com.mk.core_ui.Accent
+import com.mk.core_ui.Primary
+import com.mk.core_ui.PrimaryDark
 
+@SuppressLint("ConflictingOnColor")
 private val ColorPalette = lightColors(
     primary = Primary,
     primaryVariant = PrimaryDark,

@@ -2,7 +2,6 @@ package com.mk.home_data.remote.dto
 
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
 data class AlbumDto(
     @Json(name = "cover")

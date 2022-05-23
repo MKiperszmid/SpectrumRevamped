@@ -1,4 +1,4 @@
-package com.mk.spectrumrevamped.ui.theme
+package com.mk.core_ui
 
 import androidx.compose.ui.graphics.Color
 
