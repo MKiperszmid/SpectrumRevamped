@@ -10,4 +10,5 @@ dependencies {
     "implementation"(Retrofit.retrofit)
     "implementation"(Retrofit.okHttpLoggingInterceptor)
     "implementation"(Retrofit.moshiConverter)
+    "kapt"(Moshi.codegen)
 }

@@ -49,7 +49,9 @@ class MainActivity : ComponentActivity() {
                         startDestination = Route.HOME
                     ) {
                         composable(Route.HOME) {
-                            HomeScreen()
+                            HomeScreen({
+                                //TODO: Complete with onClick
+                            })
                         }
                         //TODO: Complete with remaining Routes
                     }
