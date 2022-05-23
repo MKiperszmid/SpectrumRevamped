@@ -9,6 +9,8 @@ import com.mk.core_ui.UIEvent
 import com.mk.core_ui.UIText
 import com.mk.home_domain.use_case.HomeUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -25,21 +27,36 @@ class HomeViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        getTopSongs()
-    }
-
-    private fun getTopSongs() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            homeUseCases.topSongs().onSuccess {
-                state = state.copy(
-                    topSongs = it,
-                    isLoading = false
-                )
-            }.onFailure {
-                state = state.copy(isLoading = false)
-                displayError(it.message)
-            }
+            awaitAll(async {
+                getTopSongs()
+            }, async {
+                getPopularArgentina()
+            })
+            state = state.copy(isLoading = false)
+        }
+    }
+
+    private suspend fun getPopularArgentina() {
+        state = state.copy(isLoading = true)
+        homeUseCases.popularArgentina().onSuccess {
+            state = state.copy(
+                popularArgentina = it
+            )
+        }.onFailure {
+            displayError(it.message)
+        }
+    }
+
+    private suspend fun getTopSongs() {
+        state = state.copy(isLoading = true)
+        homeUseCases.topSongs().onSuccess {
+            state = state.copy(
+                topSongs = it
+            )
+        }.onFailure {
+            displayError(it.message)
         }
     }
 

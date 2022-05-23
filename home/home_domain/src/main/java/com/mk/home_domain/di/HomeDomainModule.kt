@@ -2,6 +2,7 @@ package com.mk.home_domain.di
 
 import com.mk.home_domain.repository.HomeRepository
 import com.mk.home_domain.use_case.HomeUseCases
+import com.mk.home_domain.use_case.PopularArgentina
 import com.mk.home_domain.use_case.TopSongs
 import dagger.Module
 import dagger.Provides
@@ -16,7 +17,8 @@ object HomeDomainModule {
     @ViewModelScoped
     fun provideHomeUseCases(repository: HomeRepository): HomeUseCases {
         return HomeUseCases(
-            topSongs = TopSongs(repository)
+            topSongs = TopSongs(repository),
+            popularArgentina = PopularArgentina(repository)
         )
     }
 }
