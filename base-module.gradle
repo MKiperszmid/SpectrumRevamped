@@ -32,6 +32,7 @@ android {
 dependencies {
     kapt Hilt.hiltCompiler
     implementation Hilt.hiltAndroid
+    implementation Paging.paging
 
     //TODO: Remove all UI tests on these modules in the future
     testImplementation Testing.compose

@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Route.HOME) {
                             HomeScreen(
-                                onClick = {
+                                onSongClick = {
                                     lifecycleScope.launch {
                                         scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
                                     }

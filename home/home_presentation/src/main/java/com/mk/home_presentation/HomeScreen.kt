@@ -18,7 +18,7 @@ import com.mk.home_presentation.components.SongList
 
 @Composable
 fun HomeScreen(
-    onClick: (Song) -> Unit,
+    onSongClick: (Song) -> Unit,
     scaffoldState: ScaffoldState,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -33,21 +33,15 @@ fun HomeScreen(
         }
     }
     Column(modifier = Modifier.fillMaxSize()) {
-        SongList(
+        /*SongList(
             headerName = stringResource(id = R.string.top_songs),
             songs = state.topSongs,
-            onClick = onClick,
-            onPaginate = {
-                viewModel.onEvent(HomeEvent.OnPaginate)
-            }
-        )
+            onSongClick = onClick
+        )*/
         SongList(
             headerName = stringResource(id = R.string.popular_argentina),
-            songs = state.popularArgentina,
-            onClick = onClick,
-            onPaginate = {
-                viewModel.onEvent(HomeEvent.OnPaginate)
-            }
+            songsFlow = state.popularArgentina,
+            onSongClick = onSongClick
         )
     }
     Loader(state.isLoading)
