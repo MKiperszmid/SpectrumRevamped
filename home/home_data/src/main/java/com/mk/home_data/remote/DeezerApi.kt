@@ -11,7 +11,7 @@ interface DeezerApi {
     }
 
     @GET("chart/0/tracks")
-    suspend fun getTopSongs(): SongListDto
+    suspend fun getTopSongs(@Query("index") index: Int): SongListDto
 
     @GET("playlist/1279119721/tracks")
     suspend fun getPopularArgentina(@Query("index") index: Int): SongListDto

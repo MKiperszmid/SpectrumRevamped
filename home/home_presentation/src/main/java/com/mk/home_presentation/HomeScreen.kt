@@ -33,11 +33,11 @@ fun HomeScreen(
         }
     }
     Column(modifier = Modifier.fillMaxSize()) {
-        /*SongList(
+        SongList(
             headerName = stringResource(id = R.string.top_songs),
-            songs = state.topSongs,
-            onSongClick = onClick
-        )*/
+            songsFlow = state.topSongs,
+            onSongClick = onSongClick
+        )
         SongList(
             headerName = stringResource(id = R.string.popular_argentina),
             songsFlow = state.popularArgentina,

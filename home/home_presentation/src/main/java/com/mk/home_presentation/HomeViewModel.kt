@@ -46,14 +46,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun getTopSongs() {
-        state = state.copy(isLoading = true)
-        homeUseCases.topSongs().onSuccess {
-            state = state.copy(
-                topSongs = it
-            )
-        }.onFailure {
-            displayError(it.message)
-        }
+        state = state.copy(
+            isLoading = true,
+            topSongs = homeUseCases.topSongs()
+        )
     }
 
     private suspend fun displayError(message: String?) {
