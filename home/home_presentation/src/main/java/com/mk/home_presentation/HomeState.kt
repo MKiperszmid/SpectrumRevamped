@@ -7,6 +7,5 @@ import kotlinx.coroutines.flow.emptyFlow
 
 data class HomeState(
     val topSongs: Flow<PagingData<Song>> = emptyFlow(),
-    val popularArgentina: Flow<PagingData<Song>> = emptyFlow(),
-    val isLoading: Boolean = false
+    val popularArgentina: Flow<PagingData<Song>> = emptyFlow()
 )

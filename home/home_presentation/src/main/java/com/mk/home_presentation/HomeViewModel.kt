@@ -28,28 +28,30 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            state = state.copy(isLoading = true)
             awaitAll(async {
                 getTopSongs()
             }, async {
                 getPopularArgentina()
             })
-            state = state.copy(isLoading = false)
+        }
+    }
+
+    fun onEvent(homeEvent: HomeEvent) {
+        when (homeEvent) {
+            is HomeEvent.OnError -> {
+                viewModelScope.launch {
+                    displayError(homeEvent.message)
+                }
+            }
         }
     }
 
     private suspend fun getPopularArgentina() {
-        state = state.copy(
-            isLoading = true,
-            popularArgentina = homeUseCases.popularArgentina()
-        )
+        state = state.copy(popularArgentina = homeUseCases.popularArgentina())
     }
 
     private suspend fun getTopSongs() {
-        state = state.copy(
-            isLoading = true,
-            topSongs = homeUseCases.topSongs()
-        )
+        state = state.copy(topSongs = homeUseCases.topSongs())
     }
 
     private suspend fun displayError(message: String?) {

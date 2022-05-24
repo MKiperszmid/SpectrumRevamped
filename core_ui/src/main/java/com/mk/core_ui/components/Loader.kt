@@ -13,8 +13,8 @@ fun Loader(
     alignment: Alignment = Alignment.BottomCenter
 ) {
     if (shouldLoad) {
-        //.9f due to BottomNavigationBar. Investigate if there's a better way
-        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(.9f), contentAlignment = alignment) {
+        //.7f due to BottomNavigationBar. Investigate if there's a better way
+        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(.7f), contentAlignment = alignment) {
             CircularProgressIndicator(color = Accent)
         }
     }
