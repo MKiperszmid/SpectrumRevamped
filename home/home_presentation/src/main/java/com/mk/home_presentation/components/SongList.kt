@@ -26,7 +26,7 @@ fun SongList(
     headerName: String,
     songsFlow: Flow<PagingData<Song>>,
     onSongClick: (Song) -> Unit,
-    onEvent: (HomeEvent) -> Unit
+    onError: (String?) -> Unit
 ) {
     val songs = songsFlow.collectAsLazyPagingItems()
     if (songs.itemCount == 0) return
@@ -66,11 +66,11 @@ fun SongList(
             }
             loadState.refresh is LoadState.Error -> {
                 val e = songs.loadState.refresh as LoadState.Error
-                onEvent(HomeEvent.OnError(e.error.message))
+                onError(e.error.message)
             }
             loadState.append is LoadState.Error -> {
                 val e = songs.loadState.append as LoadState.Error
-                onEvent(HomeEvent.OnError(e.error.message))
+                onError(e.error.message)
             }
             else -> {}
         }

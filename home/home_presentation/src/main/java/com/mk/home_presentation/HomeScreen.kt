@@ -9,12 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.PagingData
 import com.mk.core.R
 import com.mk.core_ui.UIEvent
 import com.mk.home_domain.model.Song
 import com.mk.home_presentation.components.SongList
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun HomeScreen(
@@ -37,16 +35,16 @@ fun HomeScreen(
             headerName = stringResource(id = R.string.top_songs),
             songsFlow = state.topSongs,
             onSongClick = onSongClick,
-            onEvent = {
-                viewModel.onEvent(it)
+            onError = {
+                viewModel.onEvent(HomeEvent.OnError(it))
             }
         )
         SongList(
             headerName = stringResource(id = R.string.popular_argentina),
             songsFlow = state.popularArgentina,
             onSongClick = onSongClick,
-            onEvent = {
-                viewModel.onEvent(it)
+            onError = {
+                viewModel.onEvent(HomeEvent.OnError(it))
             }
         )
     }
