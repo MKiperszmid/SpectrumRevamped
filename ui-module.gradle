@@ -57,7 +57,6 @@ dependencies {
     implementation Compose.hiltNavigationCompose
 
     implementation Coil.compose
-    implementation Paging.paging
     implementation Paging.compose
 
     testImplementation Testing.compose
