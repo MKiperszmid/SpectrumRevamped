@@ -1,8 +1,11 @@
 package com.mk.home_presentation
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,7 +16,7 @@ import com.mk.home_presentation.components.SongList
 
 @Composable
 fun HomeScreen(
-    onClick: (Song) -> Unit,
+    onSongClick: (Song) -> Unit,
     scaffoldState: ScaffoldState,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -27,9 +30,22 @@ fun HomeScreen(
             }
         }
     }
-    SongList(
-        headerName = stringResource(id = R.string.top_songs),
-        songs = state.topSongs,
-        onClick = onClick
-    )
+    Column(modifier = Modifier.fillMaxSize()) {
+        SongList(
+            headerName = stringResource(id = R.string.top_songs),
+            songsFlow = state.topSongs,
+            onSongClick = onSongClick,
+            onError = {
+                viewModel.onEvent(HomeEvent.OnError(it))
+            }
+        )
+        SongList(
+            headerName = stringResource(id = R.string.popular_argentina),
+            songsFlow = state.popularArgentina,
+            onSongClick = onSongClick,
+            onError = {
+                viewModel.onEvent(HomeEvent.OnError(it))
+            }
+        )
+    }
 }

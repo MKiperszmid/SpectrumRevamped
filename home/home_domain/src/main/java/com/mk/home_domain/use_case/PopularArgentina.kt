@@ -5,10 +5,10 @@ import com.mk.home_domain.model.Song
 import com.mk.home_domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
 
-class TopSongs(
+class PopularArgentina(
     private val repository: HomeRepository
 ) {
     suspend operator fun invoke(): Flow<PagingData<Song>> {
-        return repository.getTopSongs()
+        return repository.getPopularArgentina()
     }
 }

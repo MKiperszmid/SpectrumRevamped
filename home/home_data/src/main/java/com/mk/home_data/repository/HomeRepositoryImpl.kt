@@ -1,21 +1,40 @@
 package com.mk.home_data.repository
 
-import com.mk.home_data.mapper.toDomain
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.mk.home_data.pager.ApiDataSource
+import com.mk.home_data.pager.PopularArgentinaDataSource
+import com.mk.home_data.pager.TopSongsDataSource
 import com.mk.home_data.remote.DeezerApi
 import com.mk.home_domain.model.Song
 import com.mk.home_domain.repository.HomeRepository
+import kotlinx.coroutines.flow.Flow
 
 class HomeRepositoryImpl(
     private val api: DeezerApi
 ) : HomeRepository {
-    override suspend fun getTopSongs(): Result<List<Song>> {
-        return try {
-            val songs = api.getTopSongs()
-            val mapped = songs.data.map { it.toDomain() }
-            return Result.success(mapped)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Result.failure(e)
-        }
+    private companion object {
+        const val PAGE_SIZE = DeezerApi.PAGE_SIZE
+        const val PREFETCH = 5
+    }
+
+    override suspend fun getTopSongs(): Flow<PagingData<Song>> {
+        return getPager(TopSongsDataSource(api)).flow
+    }
+
+    override suspend fun getPopularArgentina(): Flow<PagingData<Song>> {
+        return getPager(PopularArgentinaDataSource(api)).flow
+    }
+
+    private fun getPager(apiDataSource: ApiDataSource): Pager<Int, Song> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                prefetchDistance = PREFETCH,
+                initialLoadSize = PAGE_SIZE
+            ),
+            pagingSourceFactory = { apiDataSource }
+        )
     }
 }
