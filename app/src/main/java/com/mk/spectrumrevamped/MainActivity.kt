@@ -13,9 +13,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.compose.NavHost
@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mk.core.R
 import com.mk.home_presentation.HomeScreen
+import com.mk.home_presentation.HomeViewModel
 import com.mk.search_presentation.SearchScreen
 import com.mk.spectrumrevamped.navigation.BottomNavigationBar
 import com.mk.spectrumrevamped.navigation.NavItem
@@ -57,19 +58,16 @@ class MainActivity : ComponentActivity() {
                         startDestination = Route.HOME
                     ) {
                         composable(Route.HOME) {
-                            CompositionLocalProvider(
-                                LocalViewModelStoreOwner provides viewModelStoreOwner
-                            ) {
-                                HomeScreen(
-                                    onSongClick = {
-                                        lifecycleScope.launch {
-                                            scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
-                                        }
-                                    },
-                                    scaffoldState = scaffoldState
-                                )
-                            }
-
+                            HomeScreen(
+                                onSongClick = {
+                                    lifecycleScope.launch {
+                                        scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
+                                    }
+                                },
+                                scaffoldState = scaffoldState,
+                                //ViewModelStoreOwner fixes going to search then back to home, and calling INIT again
+                                viewModel = hiltViewModel(viewModelStoreOwner = viewModelStoreOwner)
+                            )
                         }
                         composable(Route.SEARCH) {
                             SearchScreen()
