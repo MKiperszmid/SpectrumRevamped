@@ -13,9 +13,11 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -47,19 +49,27 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(it.route)
                             })
                     }) {
+                    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+                        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+                    }
                     NavHost(
                         navController = navController,
                         startDestination = Route.HOME
                     ) {
                         composable(Route.HOME) {
-                            HomeScreen(
-                                onSongClick = {
-                                    lifecycleScope.launch {
-                                        scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
-                                    }
-                                },
-                                scaffoldState = scaffoldState
-                            )
+                            CompositionLocalProvider(
+                                LocalViewModelStoreOwner provides viewModelStoreOwner
+                            ) {
+                                HomeScreen(
+                                    onSongClick = {
+                                        lifecycleScope.launch {
+                                            scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
+                                        }
+                                    },
+                                    scaffoldState = scaffoldState
+                                )
+                            }
+
                         }
                         composable(Route.SEARCH) {
                             SearchScreen()
