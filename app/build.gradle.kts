@@ -64,6 +64,10 @@ dependencies {
     implementation(project(Modules.Home.domain))
     implementation(project(Modules.Home.data))
     implementation(project(Modules.Home.presentation))
+    implementation(project(Modules.Search.domain))
+    implementation(project(Modules.Search.data))
+    implementation(project(Modules.Search.presentation))
+
 
     implementation(Compose.ui)
     implementation(Compose.material)

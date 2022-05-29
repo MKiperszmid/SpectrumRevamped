@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.mk.core_ui.UIEvent
 import com.mk.core_ui.UIText
 import com.mk.home_domain.use_case.HomeUseCases
@@ -47,11 +48,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun getPopularArgentina() {
-        state = state.copy(popularArgentina = homeUseCases.popularArgentina())
+        state = state.copy(popularArgentina = homeUseCases.popularArgentina().cachedIn(viewModelScope))
     }
 
     private suspend fun getTopSongs() {
-        state = state.copy(topSongs = homeUseCases.topSongs())
+        state = state.copy(topSongs = homeUseCases.topSongs().cachedIn(viewModelScope))
     }
 
     private suspend fun displayError(message: String?) {

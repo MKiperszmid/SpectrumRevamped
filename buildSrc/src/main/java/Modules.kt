@@ -7,4 +7,10 @@ object Modules {
         const val domain = ":home:home_domain"
         const val presentation = ":home:home_presentation"
     }
+
+    object Search {
+        const val data = ":search:search_data"
+        const val domain = ":search:search_domain"
+        const val presentation = ":search:search_presentation"
+    }
 }
