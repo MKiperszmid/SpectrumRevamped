@@ -88,7 +88,15 @@ class MainActivity : ComponentActivity() {
                 )
             }
             composable(Route.SEARCH) {
-                SearchScreen()
+                SearchScreen(
+                    onSongClick = {
+                        lifecycleScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
+                        }
+                    },
+                    scaffoldState = scaffoldState,
+                    viewModel = hiltViewModel(viewModelStoreOwner = viewModelStoreOwner)
+                )
             }
             //TODO: Complete with remaining Routes
         }
