@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/SpectrumRevamped/app/src/main/res/drawable/ic_launcher_background.xml" value="0.102" />
         <entry key="..\:/Projects/SpectrumRevamped/core_ui/src/main/res/drawable/explore.xml" value="0.1835" />
         <entry key="..\:/Projects/SpectrumRevamped/core_ui/src/main/res/drawable/home.xml" value="0.1835" />
         <entry key="..\:/Projects/SpectrumRevamped/core_ui/src/main/res/drawable/profile.xml" value="0.1835" />

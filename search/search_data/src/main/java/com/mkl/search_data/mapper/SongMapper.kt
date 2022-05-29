@@ -1,7 +1,7 @@
-package com.mk.home_data.mapper
+package com.mkl.search_data.mapper
 
-import com.mk.home_data.remote.dto.SongDto
-import com.mk.home_domain.model.Song
+import com.mk.seach_domain.model.Song
+import com.mkl.search_data.remote.dto.SongDto
 
 fun SongDto.toDomain(): Song {
     return Song(
@@ -9,7 +9,7 @@ fun SongDto.toDomain(): Song {
         title = this.title,
         preview = this.preview,
         duration = this.duration,
-        artist = this.artist.toDomain(),
+        artistName = this.artist.name,
         image = this.album.cover
     )
 }

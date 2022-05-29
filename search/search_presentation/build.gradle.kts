@@ -4,5 +4,6 @@ apply {
 
 dependencies {
     "implementation"(project(Modules.core))
-    "implementation"(project(Modules.Home.domain))
+    "implementation"(project(Modules.coreUI))
+    "implementation"(project(Modules.Search.domain))
 }
