@@ -51,9 +51,3 @@ fun HomeScreen(
         )
     }
 }
-
-@Preview
-@Composable
-fun Preview() {
-    HomeScreen(onSongClick = {}, scaffoldState = rememberScaffoldState())
-}
