@@ -6,11 +6,6 @@ The idea is to implement everything I learn, and apply it on a project
 
 It's a work in progress, so all the technologies mentioned might not be used at the moment
 
-## Feedback
-
-If you have any feedback, please reach out to us at mkiperszmid@gmail.com
-
-
 ## Tech Stack
 
 * Kotlin
@@ -30,3 +25,6 @@ If you have any feedback, please reach out to us at mkiperszmid@gmail.com
 
 Contributions are always welcome!
 
+## Feedback
+
+If you have any feedback, please reach out to us at mkiperszmid@gmail.com
