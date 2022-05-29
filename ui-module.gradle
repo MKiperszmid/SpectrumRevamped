@@ -48,6 +48,7 @@ dependencies {
     implementation Compose.ui
     implementation Compose.material
     implementation Compose.tooling
+    implementation Compose.toolingPreview
     implementation Compose.runtime
     implementation Compose.compiler
     implementation Compose.icons
@@ -59,8 +60,6 @@ dependencies {
     implementation Coil.compose
     implementation Paging.compose
 
-    testImplementation Testing.compose
     testImplementation Testing.junit
-    androidTestImplementation Testing.compose
     androidTestImplementation Testing.junitUi
 }

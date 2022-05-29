@@ -35,8 +35,6 @@ dependencies {
     implementation Paging.paging
 
     //TODO: Remove all UI tests on these modules in the future
-    testImplementation Testing.compose
     testImplementation Testing.junit
-    androidTestImplementation Testing.compose
     androidTestImplementation Testing.junitUi
 }

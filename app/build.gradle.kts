@@ -72,6 +72,7 @@ dependencies {
     implementation(Compose.ui)
     implementation(Compose.material)
     implementation(Compose.tooling)
+    implementation(Compose.toolingPreview)
     implementation(Compose.runtime)
     implementation(Compose.compiler)
     implementation(Compose.icons)
@@ -86,5 +87,4 @@ dependencies {
     androidTestImplementation(Testing.extJunit)
     androidTestImplementation(Testing.espresso)
     androidTestImplementation(Testing.junitUi)
-    debugImplementation(Testing.compose)
 }
