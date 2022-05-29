@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import com.mk.seach_domain.model.Song
 import com.mkl.search_data.mapper.toDomain
 import com.mkl.search_data.remote.DeezerApi
-import com.mkl.search_data.remote.dto.SongListDto
 
 class SearchSongDataSource(
     private val query: String,
@@ -16,7 +15,7 @@ class SearchSongDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Song> {
         return try {
             val pageNumber = (params.key ?: 0)
-            val response = apiCall(pageNumber * DeezerApi.PAGE_SIZE)
+            val response = api.searchSong(query, pageNumber * DeezerApi.PAGE_SIZE)
 
             LoadResult.Page(
                 data = response.data.map { it.toDomain() },
@@ -26,9 +25,5 @@ class SearchSongDataSource(
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
-    }
-
-    private suspend fun apiCall(index: Int): SongListDto {
-        return api.searchSong(query, index)
     }
 }

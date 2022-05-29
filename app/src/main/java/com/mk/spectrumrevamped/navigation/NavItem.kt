@@ -1,6 +1,5 @@
 package com.mk.spectrumrevamped.navigation
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.vector.ImageVector
 

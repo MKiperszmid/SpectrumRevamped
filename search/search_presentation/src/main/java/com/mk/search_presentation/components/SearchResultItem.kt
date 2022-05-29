@@ -12,7 +12,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.mk.core_ui.*
+import com.mk.core_ui.Gray
+import com.mk.core_ui.LocalDimensions
+import com.mk.core_ui.Primary
+import com.mk.core_ui.White
 import com.mk.seach_domain.model.Song
 
 @Composable
@@ -21,9 +24,11 @@ fun SearchResultItem(
     modifier: Modifier
 ) {
     val dimens = LocalDimensions.current
-    Card(modifier = modifier
-        .fillMaxWidth()
-        .padding(5.dp), elevation = 5.dp) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(5.dp), elevation = 5.dp
+    ) {
         Row(
             modifier = Modifier.background(Primary)
         ) {

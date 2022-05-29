@@ -9,7 +9,7 @@ import com.mk.home_domain.model.Song
 
 abstract class ApiDataSource(
     private val api: DeezerApi
-): PagingSource<Int, Song>() {
+) : PagingSource<Int, Song>() {
     override fun getRefreshKey(state: PagingState<Int, Song>) = 1
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Song> {
@@ -26,5 +26,6 @@ abstract class ApiDataSource(
             LoadResult.Error(e)
         }
     }
+
     abstract suspend fun apiCall(index: Int): SongListDto
 }
