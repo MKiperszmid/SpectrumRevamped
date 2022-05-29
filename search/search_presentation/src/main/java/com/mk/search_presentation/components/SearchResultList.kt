@@ -1,11 +1,8 @@
 package com.mk.search_presentation.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -32,11 +29,9 @@ fun SearchResultList(
             items(songs) { song ->
                 song?.let {
                     Spacer(modifier = Modifier.width(dimens.small))
-                    SearchResultItem(song = song, modifier = Modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { onSongClick(song) }
-                    ))
+                    SearchResultItem(song = song, onClick = {
+                        onSongClick(song)
+                    })
                     Spacer(modifier = Modifier.width(dimens.small))
                 }
             }

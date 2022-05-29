@@ -21,8 +21,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mk.core_ui.GrayWhite
 import com.mk.core_ui.LocalDimensions
@@ -64,7 +66,8 @@ fun SearchBar(
             singleLine = true,
             textStyle = MaterialTheme.typography.body1.copy(
                 color = GrayWhite
-            )
+            ),
+            cursorBrush = SolidColor(GrayWhite)
         )
         if (shouldShowHint) {
             Text(
@@ -80,8 +83,15 @@ fun SearchBar(
         IconButton(onClick = performSearch, modifier = Modifier.align(Alignment.CenterEnd)) {
             Icon(
                 imageVector = Icons.Default.Search,
+                tint = GrayWhite,
                 contentDescription = stringResource(id = com.mk.core.R.string.search_hint)
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSearchbar() {
+    SearchBar(value = "Search query", onValueChange = {}, performSearch = { }, onFocusChange = {})
 }

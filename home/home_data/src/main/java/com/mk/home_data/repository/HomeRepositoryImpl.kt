@@ -19,11 +19,11 @@ class HomeRepositoryImpl(
         const val PREFETCH = 5
     }
 
-    override suspend fun getTopSongs(): Flow<PagingData<Song>> {
+    override fun getTopSongs(): Flow<PagingData<Song>> {
         return getPager(TopSongsDataSource(api)).flow
     }
 
-    override suspend fun getPopularArgentina(): Flow<PagingData<Song>> {
+    override fun getPopularArgentina(): Flow<PagingData<Song>> {
         return getPager(PopularArgentinaDataSource(api)).flow
     }
 

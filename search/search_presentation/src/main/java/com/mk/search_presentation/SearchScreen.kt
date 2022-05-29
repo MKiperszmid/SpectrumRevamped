@@ -2,6 +2,7 @@ package com.mk.search_presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mk.core_ui.LocalDimensions
 import com.mk.core_ui.UIEvent
 import com.mk.seach_domain.model.Song
 import com.mk.search_presentation.components.SearchBar
@@ -25,6 +27,7 @@ fun SearchScreen(
     val state = viewModel.state
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
+    val dimens = LocalDimensions.current
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect {
@@ -45,7 +48,9 @@ fun SearchScreen(
                 viewModel.onEvent(SearchEvent.OnSearch)
             }, onFocusChange = {
                 viewModel.onEvent(SearchEvent.OnSearchFocusChange(it.isFocused))
-            })
+            },
+            modifier = Modifier.padding(dimens.small)
+        )
 
         SearchResultList(state.results, onSongClick = onSongClick, onError = {
             viewModel.onEvent(SearchEvent.OnError(it))

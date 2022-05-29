@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -17,9 +18,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.mk.core_ui.LocalDimensions
 import com.mk.core_ui.components.Loader
+import com.mk.home_domain.model.Artist
 import com.mk.home_domain.model.Song
-import com.mk.home_presentation.HomeEvent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun SongList(
@@ -45,11 +47,9 @@ fun SongList(
             items(songs) { song ->
                 song?.let {
                     Spacer(modifier = Modifier.width(dimens.small))
-                    SongItem(song = song, modifier = Modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { onSongClick(song) }
-                    ))
+                    SongItem(song = song, onClick = {
+                        onSongClick(song)
+                    })
                     Spacer(modifier = Modifier.width(dimens.small))
                 }
             }

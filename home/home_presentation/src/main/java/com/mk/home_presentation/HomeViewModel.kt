@@ -28,13 +28,8 @@ class HomeViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
-            awaitAll(async {
-                getTopSongs()
-            }, async {
-                getPopularArgentina()
-            })
-        }
+        getTopSongs()
+        getPopularArgentina()
     }
 
     fun onEvent(homeEvent: HomeEvent) {
@@ -47,11 +42,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getPopularArgentina() {
-        state = state.copy(popularArgentina = homeUseCases.popularArgentina().cachedIn(viewModelScope))
+    private fun getPopularArgentina() {
+        state =
+            state.copy(popularArgentina = homeUseCases.popularArgentina().cachedIn(viewModelScope))
     }
 
-    private suspend fun getTopSongs() {
+    private fun getTopSongs() {
         state = state.copy(topSongs = homeUseCases.topSongs().cachedIn(viewModelScope))
     }
 

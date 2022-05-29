@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class TopSongs(
     private val repository: HomeRepository
 ) {
-    suspend operator fun invoke(): Flow<PagingData<Song>> {
+    operator fun invoke(): Flow<PagingData<Song>> {
         return repository.getTopSongs()
     }
 }

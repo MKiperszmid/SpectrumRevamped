@@ -9,5 +9,5 @@ object Testing {
     const val espresso = "androidx.test.espresso:espresso-core:$espresso_version"
 
     const val junitUi = "androidx.compose.ui:ui-test-junit4:${Compose.version}"
-    const val compose = "androidx.compose.ui:ui-tooling:${Compose.version}"
+    const val compose = "androidx.compose.ui:ui-test:${Compose.version}"
 }

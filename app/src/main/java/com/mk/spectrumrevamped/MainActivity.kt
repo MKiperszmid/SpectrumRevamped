@@ -27,7 +27,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mk.core.R
 import com.mk.home_presentation.HomeScreen
-import com.mk.home_presentation.HomeViewModel
 import com.mk.search_presentation.SearchScreen
 import com.mk.spectrumrevamped.navigation.BottomNavigationBar
 import com.mk.spectrumrevamped.navigation.NavItem
