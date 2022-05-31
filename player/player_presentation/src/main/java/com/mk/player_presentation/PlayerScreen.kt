@@ -1,20 +1,21 @@
 package com.mk.player_presentation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.mk.core_ui.LocalDimensions
 import com.mk.player_domain.model.Artist
 import com.mk.player_domain.model.Song
+import com.mk.player_presentation.components.PlayerController
+import com.mk.player_presentation.components.PlayerSlider
+import com.mk.player_presentation.components.SongDescription
 
 @Composable
 fun PlayerScreen(
@@ -31,18 +32,47 @@ fun PlayerScreen(
         ),
         image = "https://e-cdns-images.dzcdn.net/images/cover/00c297f61a9a7af15833daf8ec87cc8c/500x500-000000-80-0-0.jpg"
     )
+
+    val dimens = LocalDimensions.current
+
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
             model = song.image,
             contentDescription = song.title,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.2f)
         )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            AsyncImage(
+                model = song.image,
+                contentDescription = song.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(300.dp)
+            )
+            SongDescription(
+                song.title, song.artist.name
+            )
+            Spacer(modifier = Modifier.height(dimens.small))
+            PlayerSlider(
+                duration = song.duration,
+                currentValue = 50f,
+                onValueChange = {},
+                modifier = Modifier.padding(dimens.small)
+            )
+            Spacer(modifier = Modifier.height(dimens.large))
+            PlayerController(false)
+        }
 
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun PreviewPlayerScreen() {
     PlayerScreen(onMinimizeClick = {})

@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
         }
         NavHost(
             navController = navController,
-            startDestination = Route.HOME
+            startDestination = Route.PLAYER //TODO: Replace with HOME after coding!
         ) {
             composable(Route.HOME) {
                 HomeScreen(
