@@ -18,16 +18,27 @@ import com.mk.core_ui.Primary
 @Composable
 fun PlayerController(
     isPlaying: Boolean,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
+    onPlayPause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
         IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "favorite", tint = GrayWhite)
+            Icon(
+                imageVector = Icons.Default.FavoriteBorder,
+                contentDescription = "favorite",
+                tint = GrayWhite
+            )
         }
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Default.SkipPrevious, contentDescription = "previous", tint = GrayWhite)
+        IconButton(onClick = onPrevious) {
+            Icon(
+                imageVector = Icons.Default.SkipPrevious,
+                contentDescription = "previous",
+                tint = GrayWhite
+            )
         }
-        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(50.dp)) {
+        IconButton(onClick = onPlayPause, modifier = Modifier.size(50.dp)) {
             Box {
                 Surface(shape = CircleShape, color = Primary) {
                     if (isPlaying) {
@@ -48,11 +59,19 @@ fun PlayerController(
                 }
             }
         }
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Default.SkipNext, contentDescription = "next", tint = GrayWhite)
+        IconButton(onClick = onNext) {
+            Icon(
+                imageVector = Icons.Default.SkipNext,
+                contentDescription = "next",
+                tint = GrayWhite
+            )
         }
         IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Default.MoreVert, contentDescription = "options", tint = GrayWhite)
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "options",
+                tint = GrayWhite
+            )
         }
     }
 }
@@ -60,5 +79,5 @@ fun PlayerController(
 @Preview
 @Composable
 fun PreviewPlayerController() {
-    PlayerController(false)
+    PlayerController(false, {}, {}, {})
 }

@@ -1,5 +1,6 @@
 package com.mk.spectrumrevamped
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mk.core.R
 import com.mk.home_presentation.HomeScreen
 import com.mk.player_presentation.PlayerScreen
+import com.mk.player_presentation.service.MusicService
 import com.mk.search_presentation.SearchScreen
 import com.mk.spectrumrevamped.navigation.BottomNavigationBar
 import com.mk.spectrumrevamped.navigation.NavItem
@@ -129,6 +131,12 @@ class MainActivity : ComponentActivity() {
             Icons.Default.Person
         )
     )
+
+    override fun onDestroy() {
+        val intent = Intent(this, MusicService::class.java)
+        stopService(intent)
+        super.onDestroy()
+    }
 }
 
 @Composable

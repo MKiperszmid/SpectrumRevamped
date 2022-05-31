@@ -1,9 +1,9 @@
 package com.mk.player_presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
+import com.mk.player_presentation.service.MusicService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -11,7 +11,11 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(
 
 ) : ViewModel() {
-    var state by mutableStateOf(PlayerState())
-        private set
 
+    fun onCommand(context: Context, action: String) {
+        Intent(context, MusicService::class.java).also {
+            it.action = action
+            context.startService(it)
+        }
+    }
 }

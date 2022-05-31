@@ -6,6 +6,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,6 +17,9 @@ import com.mk.player_domain.model.Song
 import com.mk.player_presentation.components.PlayerController
 import com.mk.player_presentation.components.PlayerSlider
 import com.mk.player_presentation.components.SongDescription
+import com.mk.player_presentation.utils.Constants.ACTION_NEXT
+import com.mk.player_presentation.utils.Constants.ACTION_PLAY_OR_PAUSE
+import com.mk.player_presentation.utils.Constants.ACTION_PREVIOUS
 
 @Composable
 fun PlayerScreen(
@@ -34,6 +38,7 @@ fun PlayerScreen(
     )
 
     val dimens = LocalDimensions.current
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
@@ -66,9 +71,17 @@ fun PlayerScreen(
                 modifier = Modifier.padding(dimens.small)
             )
             Spacer(modifier = Modifier.height(dimens.large))
-            PlayerController(false)
+            PlayerController(isPlaying = false,
+                onPrevious = {
+                    viewModel.onCommand(context, ACTION_PREVIOUS)
+                },
+                onPlayPause = {
+                    viewModel.onCommand(context, ACTION_PLAY_OR_PAUSE)
+                },
+                onNext = {
+                    viewModel.onCommand(context, ACTION_NEXT)
+                })
         }
-
     }
 }
 
