@@ -40,6 +40,7 @@ fun PlayerScreen(
     val context = LocalContext.current
     val song = defaultSong
     val tracks = defaultTracklist
+    val musicServiceState = MusicService.state
 
     LaunchedEffect(key1 = song) {
         onCommand(context, ACTION_LOAD_SONGS, song, tracks)
@@ -71,12 +72,12 @@ fun PlayerScreen(
             Spacer(modifier = Modifier.height(dimens.small))
             PlayerSlider(
                 duration = song.duration,
-                currentValue = 50f,
+                currentValue = musicServiceState.currentSeconds.toFloat(),
                 onValueChange = {},
                 modifier = Modifier.padding(dimens.small)
             )
             Spacer(modifier = Modifier.height(dimens.large))
-            PlayerController(isPlaying = MusicService.state.isPlaying,
+            PlayerController(isPlaying = musicServiceState.isPlaying,
                 onPrevious = {
                     onCommand(context, ACTION_PREVIOUS)
                 },

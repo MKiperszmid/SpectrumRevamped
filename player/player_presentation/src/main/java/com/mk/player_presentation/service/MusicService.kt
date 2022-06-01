@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import com.mk.player_domain.model.Song
 import com.mk.player_presentation.model.TrackList
 import com.mk.player_presentation.notification.PlayerNotification
@@ -19,6 +20,9 @@ import com.mk.player_presentation.utils.Constants.ACTION_PLAY_OR_PAUSE
 import com.mk.player_presentation.utils.Constants.ACTION_PREVIOUS
 import com.mk.player_presentation.utils.Constants.NOTIFICATION_ID
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,6 +32,8 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     lateinit var playerNotification: PlayerNotification
 
     private lateinit var mediaPlayer: MediaPlayer
+
+    private var job: Job? = null
 
     companion object {
         var state by mutableStateOf(MusicPlayerState())
@@ -73,7 +79,7 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         return super.onStartCommand(intent, flags, startId)
     }
 
-    //TODO: Review nextSong and previousSong logic. See if we can reuse logic
+    //TODO: Review nextSong and previousSong logic. See how we can reuse logic
     private fun nextSong() {
         val trackList = state.trackList
         val currentIndex = trackList.indexOf(state.currentSong)
@@ -108,6 +114,7 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         } else {
             mediaPlayer.start()
         }
+        updateCurrentPlayingTime()
         state = state.copy(isPlaying = mediaPlayer.isPlaying)
     }
 
@@ -134,12 +141,17 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         startForeground(NOTIFICATION_ID, notification)
     }
 
+    //TODO: The service isn't stopping correctly.. investigate why
     override fun onDestroy() {
         super.onDestroy()
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(NOTIFICATION_ID)
         mediaPlayer.release()
+        job?.cancel()
+        job = null
+        stopForeground(true)
+        stopSelf()
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
@@ -153,5 +165,18 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     override fun onPrepared(mp: MediaPlayer?) {
         mediaPlayer.start()
         state = state.copy(isPlaying = mediaPlayer.isPlaying)
+        updateCurrentPlayingTime()
+    }
+
+    private fun updateCurrentPlayingTime() {
+        job?.cancel()
+        job = lifecycleScope.launch {
+            while (true) {
+                state = state.copy(
+                    currentSeconds = mediaPlayer.currentPosition / 1000
+                )
+                delay(1000)
+            }
+        }
     }
 }

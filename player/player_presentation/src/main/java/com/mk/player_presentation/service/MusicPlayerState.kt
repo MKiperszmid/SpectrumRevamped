@@ -8,7 +8,8 @@ data class MusicPlayerState(
     val trackList: List<Song> = emptyList(),
     val shouldSuffle: Boolean = false,
     val repeatState: LoopState = LoopState.NONE,
-    val isPlaying: Boolean = false
+    val isPlaying: Boolean = false,
+    val currentSeconds: Int = 0
 )
 
 private val emptySong = Song(
