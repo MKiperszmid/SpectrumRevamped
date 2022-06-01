@@ -38,18 +38,19 @@ fun PlayerScreen(
 ) {
     val dimens = LocalDimensions.current
     val context = LocalContext.current
-    val song = defaultSong
-    val tracks = defaultTracklist
     val musicServiceState = MusicService.state
 
     LaunchedEffect(key1 = song) {
-        onCommand(context, ACTION_LOAD_SONGS, song, tracks)
+        onCommand(context, ACTION_LOAD_SONGS, defaultSong, defaultTracklist) //TODO: Remove this line after testing
+    //onCommand(context, ACTION_LOAD_SONGS, song, tracks)
     }
+
+    val currentSong = musicServiceState.currentSong
 
     Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
-            model = song.image,
-            contentDescription = song.title,
+            model = currentSong.image,
+            contentDescription = currentSong.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
@@ -61,17 +62,17 @@ fun PlayerScreen(
             verticalArrangement = Arrangement.Center
         ) {
             AsyncImage(
-                model = song.image,
-                contentDescription = song.title,
+                model = currentSong.image,
+                contentDescription = currentSong.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(300.dp)
             )
             SongDescription(
-                song.title, song.artist.name
+                currentSong.title, currentSong.artist.name
             )
             Spacer(modifier = Modifier.height(dimens.small))
             PlayerSlider(
-                duration = song.duration,
+                duration = currentSong.duration,
                 currentValue = musicServiceState.currentSeconds.toFloat(),
                 onValueChange = {},
                 modifier = Modifier.padding(dimens.small)
