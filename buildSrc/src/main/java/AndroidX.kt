@@ -8,4 +8,7 @@ object AndroidX {
     private const val lifecycle_runtime_version = "2.4.1"
     const val lifecycleRuntime =
         "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime_version"
+
+    const val lifecycleService = "androidx.lifecycle:lifecycle-service:$lifecycle_runtime_version"
+
 }

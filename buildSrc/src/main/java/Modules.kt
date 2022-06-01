@@ -13,4 +13,10 @@ object Modules {
         const val domain = ":search:search_domain"
         const val presentation = ":search:search_presentation"
     }
+
+    object Player {
+        const val data = ":player:player_data"
+        const val domain = ":player:player_domain"
+        const val presentation = ":player:player_presentation"
+    }
 }

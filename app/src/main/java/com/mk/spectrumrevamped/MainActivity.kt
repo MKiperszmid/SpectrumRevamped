@@ -1,5 +1,6 @@
 package com.mk.spectrumrevamped
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,21 +20,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import com.mk.core.R
 import com.mk.home_presentation.HomeScreen
+import com.mk.player_presentation.PlayerScreen
+import com.mk.player_presentation.service.MusicService
 import com.mk.search_presentation.SearchScreen
 import com.mk.spectrumrevamped.navigation.BottomNavigationBar
 import com.mk.spectrumrevamped.navigation.NavItem
 import com.mk.spectrumrevamped.navigation.Route
 import com.mk.spectrumrevamped.ui.theme.SpectrumRevampedTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,12 +49,15 @@ class MainActivity : ComponentActivity() {
                 val items = navigationItems()
                 Scaffold(modifier = Modifier.fillMaxSize(), scaffoldState = scaffoldState,
                     bottomBar = {
-                        BottomNavigationBar(
-                            items = items,
-                            navController = navController,
-                            onClick = {
-                                navController.navigate(it.route)
-                            })
+                        val backstack = navController.currentBackStackEntryAsState()
+                        if (Route.PLAYER != backstack.value?.destination?.route) {
+                            BottomNavigationBar(
+                                items = items,
+                                navController = navController,
+                                onClick = {
+                                    navController.navigate(it.route)
+                                })
+                        }
                     }) {
                     // Fixes Bottom Navigation Padding
                     Box(modifier = Modifier.padding(it)) {
@@ -67,35 +73,37 @@ class MainActivity : ComponentActivity() {
         navController: NavHostController,
         scaffoldState: ScaffoldState
     ) {
+        //ViewModelStoreOwner fixes going to search then back to home, and calling INIT again
         val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
             "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
         }
         NavHost(
             navController = navController,
-            startDestination = Route.HOME
+            startDestination = Route.HOME //TODO: Replace with HOME after coding!
         ) {
             composable(Route.HOME) {
                 HomeScreen(
                     onSongClick = {
-                        lifecycleScope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
-                        }
+                        navController.navigate(Route.PLAYER)
                     },
                     scaffoldState = scaffoldState,
-                    //ViewModelStoreOwner fixes going to search then back to home, and calling INIT again
                     viewModel = hiltViewModel(viewModelStoreOwner = viewModelStoreOwner)
                 )
             }
             composable(Route.SEARCH) {
                 SearchScreen(
                     onSongClick = {
-                        lifecycleScope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar("Clicked: ${it.title}")
-                        }
+                        navController.navigate(Route.PLAYER)
                     },
                     scaffoldState = scaffoldState,
                     viewModel = hiltViewModel(viewModelStoreOwner = viewModelStoreOwner)
                 )
+            }
+            composable(
+                route = Route.PLAYER,
+                deepLinks = listOf(navDeepLink { uriPattern = "https://www.spectrumrevamped.com/player" })
+            ) {
+                PlayerScreen(onMinimizeClick = { navController.navigateUp() })
             }
             //TODO: Complete with remaining Routes
         }
@@ -124,6 +132,12 @@ class MainActivity : ComponentActivity() {
             Icons.Default.Person
         )
     )
+
+    override fun onDestroy() {
+        val intent = Intent(this, MusicService::class.java)
+        stopService(intent)
+        super.onDestroy()
+    }
 }
 
 @Composable

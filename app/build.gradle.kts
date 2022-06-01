@@ -67,6 +67,9 @@ dependencies {
     implementation(project(Modules.Search.domain))
     implementation(project(Modules.Search.data))
     implementation(project(Modules.Search.presentation))
+    implementation(project(Modules.Player.domain))
+    implementation(project(Modules.Player.data))
+    implementation(project(Modules.Player.presentation))
 
 
     implementation(Compose.ui)
