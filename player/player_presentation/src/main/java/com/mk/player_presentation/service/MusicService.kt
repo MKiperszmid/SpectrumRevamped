@@ -3,12 +3,12 @@ package com.mk.player_presentation.service
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.mk.player_domain.model.Song
 import com.mk.player_presentation.model.TrackList
@@ -31,23 +31,14 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     @Inject
     lateinit var playerNotification: PlayerNotification
 
-    private lateinit var mediaPlayer: MediaPlayer
+    @Inject
+    lateinit var playerController: MediaPlayerController
 
     private var job: Job? = null
 
     companion object {
         var state by mutableStateOf(MusicPlayerState())
             private set
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA).build()
-            )
-        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -68,10 +59,10 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
                     togglePlayPause()
                 }
                 ACTION_PREVIOUS -> {
-                    previousSong()
+                    loadSong(playerController.previousSong())
                 }
                 ACTION_NEXT -> {
-                    nextSong()
+                    loadSong(playerController.nextSong())
                 }
                 else -> {}
             }
@@ -79,55 +70,21 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         return super.onStartCommand(intent, flags, startId)
     }
 
-    //TODO: Review nextSong and previousSong logic. See how we can reuse logic
-    private fun nextSong() {
-        val trackList = state.trackList
-        val currentIndex = trackList.indexOf(state.currentSong)
-        if (currentIndex + 1 >= trackList.size) {
-            if (state.repeatState == LoopState.TRACKS && trackList.isNotEmpty()) {
-                loadSong(trackList.first())
-            } else if (state.repeatState == LoopState.SONG) {
-                loadSong(state.currentSong)
-            }
-        } else {
-            loadSong(trackList[currentIndex + 1])
-        }
-    }
-
-    private fun previousSong() {
-        val trackList = state.trackList
-        val currentIndex = trackList.indexOf(state.currentSong)
-        if (currentIndex - 1 < 0) {
-            if (state.repeatState == LoopState.TRACKS && trackList.isNotEmpty()) {
-                loadSong(trackList.last())
-            } else if (state.repeatState == LoopState.SONG) {
-                loadSong(state.currentSong)
-            }
-        } else {
-            loadSong(trackList[currentIndex - 1])
-        }
-    }
+    //TODO: Move PLAY/PAUSE, NEXT, PREVIOUS to a separate class (MediaPlayerController that receives MediaPlayer on each method)
 
     private fun togglePlayPause() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-        } else {
-            mediaPlayer.start()
-        }
+        playerController.handlePlayPause()
         updateCurrentPlayingTime()
-        state = state.copy(isPlaying = mediaPlayer.isPlaying)
+        state = state.copy(isPlaying = playerController.isPlaying())
     }
 
-    private fun loadSong(song: Song) {
-        mediaPlayer.apply {
-            reset()
-            setOnCompletionListener(this@MusicService)
-            setOnPreparedListener(this@MusicService)
-            setDataSource(song.preview)
-            prepareAsync()
+    private fun loadSong(song: Song?) {
+        song?.let {
+            playerController.reset(it.preview, this, this)
+            state = state.copy(currentSong = it)
+            startService(it)
         }
-        state = state.copy(currentSong = song)
-        startService(song)
+
     }
 
     private fun startService(song: Song) {
@@ -147,7 +104,7 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(NOTIFICATION_ID)
-        mediaPlayer.release()
+        playerController.release()
         job?.cancel()
         job = null
         stopForeground(true)
@@ -155,25 +112,27 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
+        state = state.copy(isPlaying = false)
         if (state.repeatState == LoopState.SONG) {
             loadSong(state.currentSong)
         } else {
-            nextSong()
+            loadSong(playerController.nextSong())
         }
     }
 
     override fun onPrepared(mp: MediaPlayer?) {
-        mediaPlayer.start()
-        state = state.copy(isPlaying = mediaPlayer.isPlaying)
+        playerController.start()
+        state = state.copy(isPlaying = playerController.isPlaying())
         updateCurrentPlayingTime()
     }
 
+    //TODO: Maybe move this to the player controller
     private fun updateCurrentPlayingTime() {
         job?.cancel()
         job = lifecycleScope.launch {
             while (true) {
                 state = state.copy(
-                    currentSeconds = mediaPlayer.currentPosition / 1000
+                    currentSeconds = playerController.currentTime()
                 )
                 delay(1000)
             }
