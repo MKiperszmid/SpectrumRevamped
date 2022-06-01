@@ -34,7 +34,6 @@ fun PlayerScreen(
     onMinimizeClick: () -> Unit,
     song: Song? = null,
     tracks: TrackList = TrackList()
-//TODO: Receive Song and TrackList over param?
 ) {
     val dimens = LocalDimensions.current
     val context = LocalContext.current
@@ -67,6 +66,7 @@ fun PlayerScreen(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(300.dp)
             )
+            Spacer(modifier = Modifier.height(dimens.small))
             SongDescription(
                 currentSong.title, currentSong.artist.name
             )
@@ -75,7 +75,7 @@ fun PlayerScreen(
                 duration = currentSong.duration,
                 currentValue = musicServiceState.currentSeconds.toFloat(),
                 onValueChange = {},
-                modifier = Modifier.padding(dimens.small)
+                modifier = Modifier.padding(start = dimens.medium, end = dimens.medium)
             )
             Spacer(modifier = Modifier.height(dimens.large))
             PlayerController(isPlaying = musicServiceState.isPlaying,
@@ -109,7 +109,7 @@ private fun onCommand(
         context.startService(it)
     }
 }
-
+//TODO: Remove these after successfuly receivign them with Navigation
 private val defaultSong = Song(
     title = "Tacones Rojos",
     preview = "https://cdns-preview-b.dzcdn.net/stream/c-b4c5609f35dd02d6f1761a9d4f65351c-4.mp3",
@@ -144,7 +144,6 @@ private val defaultTracklist = TrackList(
         )
     )
 )
-
 
 @Preview(showBackground = false)
 @Composable
