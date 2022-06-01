@@ -11,4 +11,5 @@ dependencies {
     "implementation"(project(Modules.coreUI))
     "implementation"(project(Modules.Player.domain))
     "implementation"(ExoPlayer.player)
+    "implementation"(AndroidX.lifecycleService)
 }
