@@ -31,7 +31,9 @@ import com.mk.player_presentation.utils.Constants.TRACKLIST_KEY
 
 @Composable
 fun PlayerScreen(
-    onMinimizeClick: () -> Unit
+    onMinimizeClick: () -> Unit,
+    song: Song? = null,
+    tracks: TrackList = TrackList()
 //TODO: Receive Song and TrackList over param?
 ) {
     val dimens = LocalDimensions.current

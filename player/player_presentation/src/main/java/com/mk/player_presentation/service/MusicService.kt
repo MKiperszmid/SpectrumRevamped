@@ -49,16 +49,14 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
             when (it.action) {
                 ACTION_LOAD_SONGS -> {
                     val extras = it.extras
-                    val parcelableSong = extras?.getParcelable<Song>(Constants.SONG_KEY)
+                    val parcelableSong =
+                        extras?.getParcelable<Song>(Constants.SONG_KEY) ?: return@let
                     val parcelableTrackList =
-                        extras?.getParcelable(Constants.TRACKLIST_KEY) ?: TrackList()
-                    state = state.copy(
-                        currentSong = parcelableSong,
-                        trackList = parcelableTrackList.trackList
-                    )
-                    parcelableSong?.let { song ->
-                        loadSong(song)
-                    }
+                        extras.getParcelable(Constants.TRACKLIST_KEY) ?: TrackList()
+                    state = state.copy(trackList = parcelableTrackList.trackList)
+                    if (parcelableSong == state.currentSong) return@let
+                    state = state.copy(currentSong = parcelableSong)
+                    loadSong(parcelableSong)
                 }
                 ACTION_PLAY_OR_PAUSE -> {
                     togglePlayPause()
@@ -80,10 +78,10 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         val trackList = state.trackList
         val currentIndex = trackList.indexOf(state.currentSong)
         if (currentIndex + 1 >= trackList.size) {
-            if (state.repeatState == LoopState.LoopTracks && trackList.isNotEmpty()) {
+            if (state.repeatState == LoopState.TRACKS && trackList.isNotEmpty()) {
                 loadSong(trackList.first())
-            } else if (state.repeatState == LoopState.LoopSong) {
-                loadSong(state.currentSong!!)
+            } else if (state.repeatState == LoopState.SONG) {
+                loadSong(state.currentSong)
             }
         } else {
             loadSong(trackList[currentIndex + 1])
@@ -94,10 +92,10 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         val trackList = state.trackList
         val currentIndex = trackList.indexOf(state.currentSong)
         if (currentIndex - 1 < 0) {
-            if (state.repeatState == LoopState.LoopTracks && trackList.isNotEmpty()) {
+            if (state.repeatState == LoopState.TRACKS && trackList.isNotEmpty()) {
                 loadSong(trackList.last())
-            } else if (state.repeatState == LoopState.LoopSong) {
-                loadSong(state.currentSong!!)
+            } else if (state.repeatState == LoopState.SONG) {
+                loadSong(state.currentSong)
             }
         } else {
             loadSong(trackList[currentIndex - 1])
@@ -145,8 +143,8 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-        if (state.repeatState == LoopState.LoopSong) {
-            loadSong(state.currentSong!!)
+        if (state.repeatState == LoopState.SONG) {
+            loadSong(state.currentSong)
         } else {
             nextSong()
         }

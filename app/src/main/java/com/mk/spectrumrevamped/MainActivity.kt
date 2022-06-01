@@ -20,13 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import com.mk.core.R
 import com.mk.home_presentation.HomeScreen
 import com.mk.player_presentation.PlayerScreen
@@ -37,7 +37,6 @@ import com.mk.spectrumrevamped.navigation.NavItem
 import com.mk.spectrumrevamped.navigation.Route
 import com.mk.spectrumrevamped.ui.theme.SpectrumRevampedTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -80,7 +79,7 @@ class MainActivity : ComponentActivity() {
         }
         NavHost(
             navController = navController,
-            startDestination = Route.PLAYER //TODO: Replace with HOME after coding!
+            startDestination = Route.HOME //TODO: Replace with HOME after coding!
         ) {
             composable(Route.HOME) {
                 HomeScreen(
@@ -100,8 +99,10 @@ class MainActivity : ComponentActivity() {
                     viewModel = hiltViewModel(viewModelStoreOwner = viewModelStoreOwner)
                 )
             }
-
-            composable(Route.PLAYER) {
+            composable(
+                route = Route.PLAYER,
+                deepLinks = listOf(navDeepLink { uriPattern = "https://www.spectrumrevamped.com/player" })
+            ) {
                 PlayerScreen(onMinimizeClick = { navController.navigateUp() })
             }
             //TODO: Complete with remaining Routes

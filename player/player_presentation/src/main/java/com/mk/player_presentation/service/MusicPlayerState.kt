@@ -1,12 +1,23 @@
 package com.mk.player_presentation.service
 
+import com.mk.player_domain.model.Artist
 import com.mk.player_domain.model.Song
-import com.mk.player_presentation.model.TrackList
 
 data class MusicPlayerState(
-    val currentSong: Song? = null,
+    val currentSong: Song = emptySong,
     val trackList: List<Song> = emptyList(),
     val shouldSuffle: Boolean = false,
-    val repeatState: LoopState = LoopState.LoopSong,
+    val repeatState: LoopState = LoopState.NONE,
     val isPlaying: Boolean = false
+)
+
+private val emptySong = Song(
+    title = "",
+    preview = "",
+    duration = 0,
+    artist = Artist(
+        id = 0,
+        name = ""
+    ),
+    image = ""
 )
