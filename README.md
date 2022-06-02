@@ -20,6 +20,7 @@ It's a work in progress, so all the technologies mentioned might not be used at 
 * Design - Material
 * JSON Parsing - Moshi
 * Testing - JUnit, Espresso, Truth
+* Trello - Tracking the stories and everything that needs to be developed
 
 ## Contributing
 
