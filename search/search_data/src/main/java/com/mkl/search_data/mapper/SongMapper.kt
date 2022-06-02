@@ -9,7 +9,7 @@ fun SongDto.toDomain(): Song {
         title = this.title,
         preview = this.preview,
         duration = this.duration,
-        artistName = this.artist.name,
+        artist = this.artist.toDomain(),
         image = this.album.cover
     )
 }

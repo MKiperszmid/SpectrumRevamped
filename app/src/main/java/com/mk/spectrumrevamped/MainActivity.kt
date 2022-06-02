@@ -30,11 +30,14 @@ import androidx.navigation.navDeepLink
 import com.mk.core.R
 import com.mk.home_presentation.HomeScreen
 import com.mk.player_presentation.PlayerScreen
+import com.mk.player_presentation.model.TrackList
 import com.mk.player_presentation.service.MusicService
 import com.mk.search_presentation.SearchScreen
+import com.mk.spectrumrevamped.mappers.toPlayer
 import com.mk.spectrumrevamped.navigation.BottomNavigationBar
 import com.mk.spectrumrevamped.navigation.NavItem
 import com.mk.spectrumrevamped.navigation.Route
+import com.mk.spectrumrevamped.navigation.RouteParam
 import com.mk.spectrumrevamped.ui.theme.SpectrumRevampedTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -79,11 +82,19 @@ class MainActivity : ComponentActivity() {
         }
         NavHost(
             navController = navController,
-            startDestination = Route.HOME //TODO: Replace with HOME after coding!
+            startDestination = Route.HOME
         ) {
             composable(Route.HOME) {
                 HomeScreen(
-                    onSongClick = {
+                    onSongClick = { song, list ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            RouteParam.SONG_KEY,
+                            song.toPlayer()
+                        )
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            RouteParam.TRACKLIST_KEY,
+                            TrackList(list.map { it.toPlayer() })
+                        )
                         navController.navigate(Route.PLAYER)
                     },
                     scaffoldState = scaffoldState,
@@ -93,6 +104,10 @@ class MainActivity : ComponentActivity() {
             composable(Route.SEARCH) {
                 SearchScreen(
                     onSongClick = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            RouteParam.SONG_KEY,
+                            it.toPlayer()
+                        )
                         navController.navigate(Route.PLAYER)
                     },
                     scaffoldState = scaffoldState,
@@ -101,9 +116,15 @@ class MainActivity : ComponentActivity() {
             }
             composable(
                 route = Route.PLAYER,
-                deepLinks = listOf(navDeepLink { uriPattern = "https://www.spectrumrevamped.com/player" })
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "https://www.spectrumrevamped.com/player"
+                })
             ) {
-                PlayerScreen(onMinimizeClick = { navController.navigateUp() })
+                PlayerScreen(
+                    onMinimizeClick = { navController.navigateUp() },
+                    song = navController.previousBackStackEntry?.savedStateHandle?.get(RouteParam.SONG_KEY),
+                    tracks = navController.previousBackStackEntry?.savedStateHandle?.get(RouteParam.TRACKLIST_KEY) ?: TrackList()
+                )
             }
             //TODO: Complete with remaining Routes
         }

@@ -3,13 +3,11 @@ package com.mk.home_presentation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mk.core.R
 import com.mk.core_ui.UIEvent
@@ -18,7 +16,7 @@ import com.mk.home_presentation.components.SongList
 
 @Composable
 fun HomeScreen(
-    onSongClick: (Song) -> Unit,
+    onSongClick: (Song, List<Song>) -> Unit,
     scaffoldState: ScaffoldState,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
