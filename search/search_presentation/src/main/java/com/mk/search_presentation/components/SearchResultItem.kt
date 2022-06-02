@@ -20,6 +20,7 @@ import com.mk.core_ui.Gray
 import com.mk.core_ui.LocalDimensions
 import com.mk.core_ui.Primary
 import com.mk.core_ui.White
+import com.mk.seach_domain.model.Artist
 import com.mk.seach_domain.model.Song
 
 @Composable
@@ -60,7 +61,7 @@ fun SearchResultItem(
                 )
                 Spacer(modifier = Modifier.height(dimens.extraSmall))
                 Text(
-                    text = song.artistName,
+                    text = song.artist.name,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     color = Gray,
@@ -77,7 +78,7 @@ fun SearchResultItem(
 fun PreviewSearchResultItem() {
     SearchResultItem(
         song = Song(
-            1, "This is a very long long long long song name", "", 1, "This is a very long long long long long long long artist name",
+            1, "This is a very long long long long song name", "", 1, Artist(0, "This is a very long long long long long long long artist name", ""),
             ""
         ), onClick = { }
     )

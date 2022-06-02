@@ -7,4 +7,5 @@
     <string name="top_songs">Top Songs</string>
     <string name="popular_argentina">Popular in Argentina</string>
     <string name="search_hint">Search…</string>
+    <string name="minimize">Minimize</string>
 </resources>
