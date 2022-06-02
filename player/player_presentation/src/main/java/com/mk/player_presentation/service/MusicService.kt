@@ -69,8 +69,6 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         return super.onStartCommand(intent, flags, startId)
     }
 
-    //TODO: Move PLAY/PAUSE, NEXT, PREVIOUS to a separate class (MediaPlayerController that receives MediaPlayer on each method)
-
     private fun togglePlayPause() {
         playerController.handlePlayPause()
         updateCurrentPlayingTime()
@@ -83,7 +81,6 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
             state = state.copy(currentSong = it)
             startService(it)
         }
-
     }
 
     private fun startService(song: Song) {

@@ -4,12 +4,12 @@ package com.mk.home_data.remote.dto
 import com.squareup.moshi.Json
 
 data class SongListDto(
-    @Json(name = "data")
+    @field:Json(name = "data")
     val data: List<SongDto>,
-    @Json(name = "total")
+    @field:Json(name = "total")
     val total: Int,
-    @Json(name = "next")
+    @field:Json(name = "next")
     val next: String?,
-    @Json(name = "prev")
+    @field:Json(name = "prev")
     val prev: String?
 )
