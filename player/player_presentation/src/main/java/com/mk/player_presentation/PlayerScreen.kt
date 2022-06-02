@@ -52,7 +52,7 @@ fun PlayerScreen(
     val currentSong = musicServiceState.currentSong
 
     Box(modifier = Modifier.fillMaxSize()) {
-        IconButton(onClick = onMinimizeClick, modifier = Modifier.align(Alignment.TopStart)) {
+        IconButton(onClick = onMinimizeClick, modifier = Modifier.align(Alignment.TopStart).padding(dimens.small)) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 tint = GrayWhite,
