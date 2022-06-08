@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Home
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavHostController
@@ -39,7 +37,6 @@ import com.mk.spectrumrevamped.mappers.toPlayer
 import com.mk.spectrumrevamped.navigation.BottomNavigationBar
 import com.mk.spectrumrevamped.navigation.NavItem
 import com.mk.spectrumrevamped.navigation.Route
-import com.mk.spectrumrevamped.navigation.RouteParam
 import com.mk.spectrumrevamped.ui.theme.SpectrumRevampedTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -161,18 +158,5 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(this, MusicService::class.java)
         stopService(intent)
         super.onDestroy()
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SpectrumRevampedTheme {
-        Greeting("Android")
     }
 }
