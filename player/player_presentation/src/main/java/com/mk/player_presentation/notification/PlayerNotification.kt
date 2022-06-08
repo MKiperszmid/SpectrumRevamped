@@ -4,13 +4,11 @@ import android.app.*
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import com.mk.core_ui.R
-import com.mk.player_domain.model.Song
 import com.mk.player_presentation.utils.Constants.NOTIFICATION_CHANNEL_ID
 import com.mk.player_presentation.utils.Constants.NOTIFICATION_CHANNEL_NAME
 
@@ -18,7 +16,8 @@ class PlayerNotification {
     fun createNotification(
         context: Context,
         session: MediaSessionCompat,
-        notificationManager: NotificationManager
+        notificationManager: NotificationManager,
+        isPlaying: Boolean
     ): Notification {
         createNotificationChannel(notificationManager)
         //TODO: Investigate about Media2 and Media3 libraries
@@ -32,12 +31,19 @@ class PlayerNotification {
             setContentText(description.subtitle)
             setSubText(description.description)
             setLargeIcon(description.iconBitmap)
-            setContentIntent(controller.sessionActivity)
+            //setContentIntent(controller.sessionActivity) //This doesn't work on compose?
             priority = NotificationCompat.PRIORITY_LOW
             addAction(com.mk.player_presentation.R.drawable.ic_previous, "previous", null)
-            //.setContentIntent(getPendingIntent(context)) TODO: Fix this. Stops playing the current song
+            if (isPlaying) {
+                addAction(com.mk.player_presentation.R.drawable.ic_pause, "pause", null)
+            } else {
+                addAction(com.mk.player_presentation.R.drawable.ic_play, "play", null)
+            }
+            addAction(com.mk.player_presentation.R.drawable.ic_next, "next", null)
+            //.setContentIntent(getPendingIntent(context)) //TODO: Fix this. Stops playing the current song
             setStyle(
-                androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0)
+                androidx.media.app.NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(0, 1, 2)
                     .setMediaSession(session.sessionToken)
             )
             setAutoCancel(false)

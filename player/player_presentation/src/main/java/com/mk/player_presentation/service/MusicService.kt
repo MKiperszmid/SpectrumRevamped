@@ -86,17 +86,18 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         playerController.handlePlayPause()
         updateCurrentPlayingTime()
         state = state.copy(isPlaying = playerController.isPlaying())
+        startService(state.currentSong, false)
     }
 
     private fun loadSong(song: Song?) {
         song?.let {
             playerController.reset(it.preview, this, this)
             state = state.copy(currentSong = it)
-            startService(it)
+            startService(it, true)
         }
     }
 
-    private fun startService(song: Song) {
+    private fun startService(song: Song, songLoad: Boolean) {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -119,11 +120,11 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
             val notification = playerNotification.createNotification(
                 context = this@MusicService,
                 session = mediaSessionCompat,
-                notificationManager = notificationManager
+                notificationManager = notificationManager,
+                isPlaying = if(songLoad) true else playerController.isPlaying()
             )
             startForeground(NOTIFICATION_ID, notification)
         }
-
     }
 
     //TODO: The service isn't stopping correctly.. investigate why
