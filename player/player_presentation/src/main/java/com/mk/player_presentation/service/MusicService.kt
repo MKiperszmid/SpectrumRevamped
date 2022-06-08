@@ -3,12 +3,19 @@ package com.mk.player_presentation.service
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
+import android.media.MediaMetadata
 import android.media.MediaPlayer
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.mk.player_domain.model.Song
 import com.mk.player_presentation.model.TrackList
 import com.mk.player_presentation.notification.PlayerNotification
@@ -33,11 +40,17 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     @Inject
     lateinit var playerController: MediaPlayerController
 
+    private lateinit var mediaSessionCompat: MediaSessionCompat
     private var job: Job? = null
 
     companion object {
         var state by mutableStateOf(MusicPlayerState())
             private set
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        mediaSessionCompat = MediaSessionCompat(this, "MediaTag")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -69,32 +82,49 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
         return super.onStartCommand(intent, flags, startId)
     }
 
-    //TODO: Move PLAY/PAUSE, NEXT, PREVIOUS to a separate class (MediaPlayerController that receives MediaPlayer on each method)
-
     private fun togglePlayPause() {
         playerController.handlePlayPause()
         updateCurrentPlayingTime()
         state = state.copy(isPlaying = playerController.isPlaying())
+        startService(state.currentSong, false)
     }
 
     private fun loadSong(song: Song?) {
         song?.let {
             playerController.reset(it.preview, this, this)
             state = state.copy(currentSong = it)
-            startService(it)
+            startService(it, true)
         }
-
     }
 
-    private fun startService(song: Song) {
+    private fun startService(song: Song, songLoad: Boolean) {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = playerNotification.createNotification(
-            song = song,
-            context = this,
-            notificationManager = notificationManager
-        )
-        startForeground(NOTIFICATION_ID, notification)
+
+        lifecycleScope.launch {
+            val loader = ImageLoader(this@MusicService)
+            val request = ImageRequest.Builder(this@MusicService)
+                .data(song.image)
+                .allowHardware(false) // Disable hardware bitmaps.
+                .build()
+
+            val result = (loader.execute(request) as SuccessResult).drawable
+            val bitmap = (result as BitmapDrawable).bitmap
+
+            mediaSessionCompat.setMetadata(
+                MediaMetadataCompat.Builder()
+                    .putString(MediaMetadata.METADATA_KEY_TITLE, song.title)
+                    .putString(MediaMetadata.METADATA_KEY_ARTIST, song.artist.name)
+                    .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap).build()
+            )
+            val notification = playerNotification.createNotification(
+                context = this@MusicService,
+                session = mediaSessionCompat,
+                notificationManager = notificationManager,
+                isPlaying = if(songLoad) true else playerController.isPlaying()
+            )
+            startForeground(NOTIFICATION_ID, notification)
+        }
     }
 
     //TODO: The service isn't stopping correctly.. investigate why

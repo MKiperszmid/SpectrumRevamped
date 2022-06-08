@@ -10,6 +10,6 @@ fun SongDto.toDomain(): Song {
         preview = this.preview,
         duration = this.duration,
         artist = this.artist.toDomain(),
-        image = this.album.cover
+        image = this.album.coverBig
     )
 }

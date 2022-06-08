@@ -3,26 +3,26 @@ package com.mk.home_data.remote.dto
 import com.squareup.moshi.Json
 
 data class ArtistDto(
-    @Json(name = "id")
+    @field:Json(name = "id")
     val id: Int,
-    @Json(name = "link")
+    @field:Json(name = "link")
     val link: String,
-    @Json(name = "name")
+    @field:Json(name = "name")
     val name: String,
-    @Json(name = "picture")
+    @field:Json(name = "picture")
     val picture: String,
-    @Json(name = "picture_big")
+    @field:Json(name = "picture_big")
     val pictureBig: String,
-    @Json(name = "picture_medium")
+    @field:Json(name = "picture_medium")
     val pictureMedium: String,
-    @Json(name = "picture_small")
+    @field:Json(name = "picture_small")
     val pictureSmall: String,
-    @Json(name = "picture_xl")
+    @field:Json(name = "picture_xl")
     val pictureXl: String,
-    @Json(name = "radio")
+    @field:Json(name = "radio")
     val radio: Boolean,
-    @Json(name = "tracklist")
+    @field:Json(name = "tracklist")
     val tracklist: String,
-    @Json(name = "type")
+    @field:Json(name = "type")
     val type: String
 )

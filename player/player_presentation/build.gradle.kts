@@ -10,6 +10,7 @@ dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.coreUI))
     "implementation"(project(Modules.Player.domain))
-    "implementation"(ExoPlayer.player)
+    //"implementation"(ExoPlayer.player) TODO: Implement ExoPlayer
+    "implementation"(Media.media)
     "implementation"(AndroidX.lifecycleService)
 }
