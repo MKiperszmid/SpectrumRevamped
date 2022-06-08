@@ -3,12 +3,19 @@ package com.mk.player_presentation.service
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
+import android.media.MediaMetadata
 import android.media.MediaPlayer
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.mk.player_domain.model.Song
 import com.mk.player_presentation.model.TrackList
 import com.mk.player_presentation.notification.PlayerNotification
@@ -33,11 +40,17 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     @Inject
     lateinit var playerController: MediaPlayerController
 
+    private lateinit var mediaSessionCompat: MediaSessionCompat
     private var job: Job? = null
 
     companion object {
         var state by mutableStateOf(MusicPlayerState())
             private set
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        mediaSessionCompat = MediaSessionCompat(this, "MediaTag")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -86,12 +99,31 @@ class MusicService : LifecycleService(), MediaPlayer.OnCompletionListener,
     private fun startService(song: Song) {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = playerNotification.createNotification(
-            song = song,
-            context = this,
-            notificationManager = notificationManager
-        )
-        startForeground(NOTIFICATION_ID, notification)
+
+        lifecycleScope.launch {
+            val loader = ImageLoader(this@MusicService)
+            val request = ImageRequest.Builder(this@MusicService)
+                .data(song.image)
+                .allowHardware(false) // Disable hardware bitmaps.
+                .build()
+
+            val result = (loader.execute(request) as SuccessResult).drawable
+            val bitmap = (result as BitmapDrawable).bitmap
+
+            mediaSessionCompat.setMetadata(
+                MediaMetadataCompat.Builder()
+                    .putString(MediaMetadata.METADATA_KEY_TITLE, song.title)
+                    .putString(MediaMetadata.METADATA_KEY_ARTIST, song.artist.name)
+                    .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap).build()
+            )
+            val notification = playerNotification.createNotification(
+                context = this@MusicService,
+                session = mediaSessionCompat,
+                notificationManager = notificationManager
+            )
+            startForeground(NOTIFICATION_ID, notification)
+        }
+
     }
 
     //TODO: The service isn't stopping correctly.. investigate why

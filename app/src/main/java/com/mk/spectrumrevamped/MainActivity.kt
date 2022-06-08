@@ -29,9 +29,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import com.mk.core.R
 import com.mk.home_presentation.HomeScreen
+import com.mk.player_domain.model.Song
 import com.mk.player_presentation.PlayerScreen
 import com.mk.player_presentation.model.TrackList
 import com.mk.player_presentation.service.MusicService
+import com.mk.player_presentation.utils.Constants
 import com.mk.search_presentation.SearchScreen
 import com.mk.spectrumrevamped.mappers.toPlayer
 import com.mk.spectrumrevamped.navigation.BottomNavigationBar
@@ -87,14 +89,8 @@ class MainActivity : ComponentActivity() {
             composable(Route.HOME) {
                 HomeScreen(
                     onSongClick = { song, list ->
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            RouteParam.SONG_KEY,
-                            song.toPlayer()
-                        )
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            RouteParam.TRACKLIST_KEY,
-                            TrackList(list.map { it.toPlayer() })
-                        )
+                        val tracks = TrackList(list.map { it.toPlayer() })
+                        loadSongs(song.toPlayer(), tracks)
                         navController.navigate(Route.PLAYER)
                     },
                     scaffoldState = scaffoldState,
@@ -104,10 +100,7 @@ class MainActivity : ComponentActivity() {
             composable(Route.SEARCH) {
                 SearchScreen(
                     onSongClick = {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            RouteParam.SONG_KEY,
-                            it.toPlayer()
-                        )
+                        loadSongs(it.toPlayer())
                         navController.navigate(Route.PLAYER)
                     },
                     scaffoldState = scaffoldState,
@@ -121,12 +114,22 @@ class MainActivity : ComponentActivity() {
                 })
             ) {
                 PlayerScreen(
-                    onMinimizeClick = { navController.navigateUp() },
-                    song = navController.previousBackStackEntry?.savedStateHandle?.get(RouteParam.SONG_KEY),
-                    tracks = navController.previousBackStackEntry?.savedStateHandle?.get(RouteParam.TRACKLIST_KEY) ?: TrackList()
+                    onMinimizeClick = { navController.navigateUp() }
                 )
             }
             //TODO: Complete with remaining Routes
+        }
+    }
+
+    private fun loadSongs(song: Song, tracks: TrackList = TrackList()) {
+        Intent(this, MusicService::class.java).also {
+            it.action = Constants.ACTION_LOAD_SONGS
+            val bundle = Bundle().apply {
+                putParcelable(Constants.SONG_KEY, song)
+                putParcelable(Constants.TRACKLIST_KEY, tracks)
+            }
+            it.putExtras(bundle)
+            startService(it)
         }
     }
 

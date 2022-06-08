@@ -37,17 +37,11 @@ import com.mk.player_presentation.utils.Constants.TRACKLIST_KEY
 
 @Composable
 fun PlayerScreen(
-    onMinimizeClick: () -> Unit,
-    song: Song? = null,
-    tracks: TrackList
+    onMinimizeClick: () -> Unit
 ) {
     val dimens = LocalDimensions.current
     val context = LocalContext.current
     val musicServiceState = MusicService.state
-
-    LaunchedEffect(key1 = song) {
-        onCommand(context, ACTION_LOAD_SONGS, song, tracks)
-    }
 
     val currentSong = musicServiceState.currentSong
 
@@ -125,5 +119,5 @@ private fun onCommand(
 @Preview(showBackground = false)
 @Composable
 fun PreviewPlayerScreen() {
-    PlayerScreen(onMinimizeClick = {}, tracks = TrackList())
+    PlayerScreen(onMinimizeClick = {})
 }
