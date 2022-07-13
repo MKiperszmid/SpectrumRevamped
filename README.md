@@ -10,7 +10,7 @@ It's a work in progress, so all the technologies mentioned might not be used at 
 
 * Kotlin
 * Compose
-* MVVM
+* MVVM - MVI
 * Clean Architecture
 * Modularization / Multi-Module App
 * SOLID
@@ -22,10 +22,7 @@ It's a work in progress, so all the technologies mentioned might not be used at 
 * Testing - JUnit, Espresso, Truth
 * Trello - Tracking the stories and everything that needs to be developed
 
-## Contributing
+## Contributing & Feedback
 
 Contributions are always welcome!
-
-## Feedback
-
-If you have any feedback, please reach out to us at mkiperszmid@gmail.com
+If you have any feedback, please reach out at mkiperszmid@gmail.com
